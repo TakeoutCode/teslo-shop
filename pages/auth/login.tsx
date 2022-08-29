@@ -44,6 +44,7 @@ const LoginPage: NextPage = () => {
 
     if (!isValidLogin) {
       setShowError(true);
+      setDisabledButton(false);
       setTimeout(() => {
         setShowError(false);
       }, 3000);
@@ -51,7 +52,8 @@ const LoginPage: NextPage = () => {
     }
 
     setDisabledButton(false);
-    router.replace('/');
+    const destination = router.query.p?.toString() || '/';
+    router.replace(destination);
   };
   return (
     <AuthLayout title='Ingresar'>
@@ -123,7 +125,14 @@ const LoginPage: NextPage = () => {
               )}
             </Grid>
             <Grid item xs={12} display='flex' justifyContent='center'>
-              <NextLink href='/auth/register' passHref>
+              <NextLink
+                href={
+                  router.query.p
+                    ? `/auth/register?p=${router.query.p}`
+                    : '/auth/register'
+                }
+                passHref
+              >
                 <Link underline='always'>No tienes cuenta?</Link>
               </NextLink>
             </Grid>

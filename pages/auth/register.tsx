@@ -48,6 +48,7 @@ const RegisterPage: NextPage = () => {
     if (hasError) {
       setShowError(true);
       setErrorMessage(message!);
+      setDisabledButton(false);
       setTimeout(() => {
         setShowError(false);
       }, 3000);
@@ -55,7 +56,8 @@ const RegisterPage: NextPage = () => {
     }
 
     setDisabledButton(false);
-    router.replace('/');
+    const destination = router.query.p?.toString() || '/';
+    router.replace(destination);
   };
   return (
     <AuthLayout title='Register'>
@@ -76,6 +78,7 @@ const RegisterPage: NextPage = () => {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                type='text'
                 label='Nombre'
                 variant='filled'
                 fullWidth
@@ -139,7 +142,14 @@ const RegisterPage: NextPage = () => {
               )}
             </Grid>
             <Grid item xs={12} display='flex' justifyContent='center'>
-              <NextLink href='/auth/register' passHref>
+              <NextLink
+                href={
+                  router.query.p
+                    ? `/auth/login?p=${router.query.p}`
+                    : '/auth/login'
+                }
+                passHref
+              >
                 <Link underline='always'>Ya tienes cuenta?</Link>
               </NextLink>
             </Grid>

@@ -1,4 +1,7 @@
+import { useContext } from 'react';
 import { NextPage } from 'next';
+import NextLink from 'next/link';
+
 import {
   Typography,
   Grid,
@@ -9,11 +12,28 @@ import {
   Button,
   Link,
 } from '@mui/material';
-import NextLink from 'next/link';
+
 import { CartList, OrderSummary } from '../../components/cart';
 import { ShopLayout } from '../../components/layouts';
+import { CartContext } from '../../context';
+import { countries } from '../../utils';
 
 const SummaryPage: NextPage = () => {
+  const { shippingAddress, numberOfItems } = useContext(CartContext);
+  if (!shippingAddress) {
+    return <></>;
+  }
+
+  const {
+    firstName,
+    lastName,
+    address,
+    address2 = '',
+    zip,
+    city,
+    country,
+    phone,
+  } = shippingAddress;
   return (
     <ShopLayout
       title={'Resumen de Compra'}
@@ -29,22 +49,34 @@ const SummaryPage: NextPage = () => {
         <Grid item xs={12} sm={5}>
           <Card className='summary-card'>
             <CardContent>
-              <Typography variant='h2'>Resumen (3 productos)</Typography>
+              <Typography variant='h2'>
+                Resumen ({numberOfItems}{' '}
+                {numberOfItems === 1 ? 'producto' : 'productos'})
+              </Typography>
               <Divider sx={{ my: 1 }} />
               <Box display='flex' justifyContent='space-between'>
                 <Typography variant='subtitle1'>
-                  direccion de entrega
+                  Direccion de entrega
                 </Typography>
                 <NextLink href='/checkout/address' passHref>
                   <Link underline='always'>Editar</Link>
                 </NextLink>
               </Box>
 
-              <Typography>Braulio Quezada</Typography>
-              <Typography>calle 3534</Typography>
-              <Typography>15530, 2secc</Typography>
-              <Typography>Mexico</Typography>
-              <Typography>+52 37465782</Typography>
+              <Typography>
+                {firstName} {lastName}
+              </Typography>
+              <Typography>
+                {address}
+                {address2 ? `, ${address2}` : ''}
+              </Typography>
+              <Typography>
+                {city}, {zip}
+              </Typography>
+              <Typography>
+                {countries.find((c) => c.code === country)?.name}
+              </Typography>
+              <Typography>{phone}</Typography>
               <Divider sx={{ my: 1 }} />
               <Box display='flex' justifyContent='end'>
                 <NextLink href='/cart' passHref>
