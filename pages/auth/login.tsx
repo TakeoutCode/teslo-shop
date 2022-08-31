@@ -1,12 +1,14 @@
-import { useState, useContext } from 'react';
-import { NextPage } from 'next';
+import { useState, useEffect } from 'react';
+import { NextPage, GetServerSideProps } from 'next';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
+import { getSession, signIn, getProviders } from 'next-auth/react';
 
 import {
   Box,
   Button,
   Chip,
+  Divider,
   Grid,
   Link,
   TextField,
@@ -17,7 +19,6 @@ import { useForm } from 'react-hook-form';
 
 import { AuthLayout } from '../../components/layouts';
 import { validations } from '../../utils';
-import { AuthContext } from '../../context';
 
 type FormData = {
   email: string;
@@ -26,7 +27,6 @@ type FormData = {
 
 const LoginPage: NextPage = () => {
   const router = useRouter();
-  const { loginUser } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -36,24 +36,20 @@ const LoginPage: NextPage = () => {
   const [showError, setShowError] = useState(false);
   const [disabledButtom, setDisabledButton] = useState(false);
 
+  const [providers, setProviders] = useState<any>({});
+
+  useEffect(() => {
+    getProviders().then((prov) => {
+      setProviders(prov);
+    });
+  }, []);
+
   const onLoginUser = async ({ email, password }: FormData) => {
     setDisabledButton(true);
     setShowError(false);
 
-    const isValidLogin = await loginUser(email, password);
-
-    if (!isValidLogin) {
-      setShowError(true);
-      setDisabledButton(false);
-      setTimeout(() => {
-        setShowError(false);
-      }, 3000);
-      return;
-    }
-
+    await signIn('credentials', { email, password });
     setDisabledButton(false);
-    const destination = router.query.p?.toString() || '/';
-    router.replace(destination);
   };
   return (
     <AuthLayout title='Ingresar'>
@@ -136,6 +132,32 @@ const LoginPage: NextPage = () => {
                 <Link underline='always'>No tienes cuenta?</Link>
               </NextLink>
             </Grid>
+
+            <Grid
+              item
+              xs={12}
+              display='flex'
+              flexDirection='column'
+              justifyContent='center'
+            >
+              <Divider sx={{ with: '100%', mb: 2 }} />
+              {Object.values(providers).map((provider: any) => {
+                if (provider.id === 'credentials')
+                  return <div key='credentials'></div>;
+                return (
+                  <Button
+                    key={provider.id}
+                    variant='outlined'
+                    fullWidth
+                    color='primary'
+                    sx={{ mb: 1 }}
+                    onClick={() => signIn(provider.id)}
+                  >
+                    {provider.name}
+                  </Button>
+                );
+              })}
+            </Grid>
           </Grid>
         </Box>
       </form>
@@ -143,4 +165,22 @@ const LoginPage: NextPage = () => {
   );
 };
 
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  query,
+}) => {
+  const session = await getSession({ req });
+  const { p = '/' } = query;
+  if (session) {
+    return {
+      redirect: {
+        destination: p.toString(),
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
+};
 export default LoginPage;

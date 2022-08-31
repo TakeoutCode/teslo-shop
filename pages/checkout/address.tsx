@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 
@@ -37,7 +37,7 @@ const getAddressFromCookies = (): FormData => {
     address2: Cookies.get('address2') || '',
     zip: Cookies.get('zip') || '',
     city: Cookies.get('city') || '',
-    country: Cookies.get('country') || '',
+    country: Cookies.get('country') || countries[0].code,
     phone: Cookies.get('phone') || '',
   };
 };
@@ -49,14 +49,33 @@ const AddressPage: NextPage = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<FormData>({
-    defaultValues: getAddressFromCookies(),
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      address: '',
+      address2: '',
+      zip: '',
+      city: '',
+      country: Cookies.get('country') || '',
+      phone: '',
+    },
   });
+
+  const [defaultCountry, setDefaultCountry] = useState('');
+
+  useEffect(() => {
+    const addressFromCookies = getAddressFromCookies();
+    reset(addressFromCookies);
+    setDefaultCountry(addressFromCookies.country);
+  }, [reset]);
 
   const onSubmitAddress = (data: FormData) => {
     updateAddress(data);
     router.push('/checkout/summary');
   };
+
   return (
     <ShopLayout
       title={'Direccion'}
@@ -140,16 +159,19 @@ const AddressPage: NextPage = () => {
               <TextField
                 select
                 variant='filled'
-                label='Pais'
-                defaultValue={Cookies.get('country') || countries[0].code}
+                fullWidth
+                label='País'
+                key={defaultCountry}
+                defaultValue={defaultCountry}
                 {...register('country', {
-                  required: 'Este campo es requerido',
+                  required: 'El país es requerido',
                 })}
                 error={!!errors.country}
+                helperText={errors.country?.message}
               >
-                {countries.map((countrie) => (
-                  <MenuItem key={countrie.code} value={countrie.code}>
-                    {countrie.name}
+                {countries.map((country) => (
+                  <MenuItem key={country.code} value={country.code}>
+                    {country.name}
                   </MenuItem>
                 ))}
               </TextField>

@@ -1,7 +1,8 @@
 import { useState, useContext } from 'react';
-import { NextPage } from 'next';
+import { NextPage, GetServerSideProps } from 'next';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
+import { getSession, signIn } from 'next-auth/react';
 
 import {
   Box,
@@ -16,7 +17,6 @@ import { useForm } from 'react-hook-form';
 import { ErrorOutline } from '@mui/icons-material';
 
 import { AuthLayout } from '../../components/layouts';
-import { tesloApi } from '../../api';
 import { validations } from '../../utils';
 import { AuthContext } from '../../context';
 
@@ -56,8 +56,7 @@ const RegisterPage: NextPage = () => {
     }
 
     setDisabledButton(false);
-    const destination = router.query.p?.toString() || '/';
-    router.replace(destination);
+    await signIn('credentials', { email, password });
   };
   return (
     <AuthLayout title='Register'>
@@ -158,6 +157,25 @@ const RegisterPage: NextPage = () => {
       </form>
     </AuthLayout>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  query,
+}) => {
+  const session = await getSession({ req });
+  const { p = '/' } = query;
+  if (session) {
+    return {
+      redirect: {
+        destination: p.toString(),
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
 };
 
 export default RegisterPage;
