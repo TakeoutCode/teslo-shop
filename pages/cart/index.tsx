@@ -37,9 +37,10 @@ const CartPage: NextPage = () => {
         Carrito
       </Typography>
       <Grid container>
-        <Grid item xs={12} sm={7}>
+        <Grid item xs={12} sm={6.5}>
           <CartList editable />
         </Grid>
+        <Grid item xs={0} sm={0.5}></Grid>
         <Grid item xs={12} sm={5}>
           <Card className='summary-card'>
             <CardContent>

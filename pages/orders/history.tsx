@@ -1,8 +1,13 @@
-import { NextPage } from 'next';
+import { NextPage, GetServerSideProps } from 'next';
 import NextLink from 'next/link';
+
 import { Link, Chip, Grid, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import { getSession } from 'next-auth/react';
+
 import { ShopLayout } from '../../components/layouts';
+import { dbOrders } from '../../database';
+import { IOrder } from '../../interfaces';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 100 },
@@ -28,22 +33,26 @@ const columns: GridColDef[] = [
     sortable: false,
     renderCell: (params: GridValueGetterParams) => {
       return (
-        <NextLink href={`/orders/${params.row.id}`} passHref>
+        <NextLink href={`/orders/${params.row.orderId}`} passHref>
           <Link underline='always'>Ver orden</Link>
         </NextLink>
       );
     },
   },
 ];
-const rows = [
-  { id: 1, paid: false, fullname: 'Braulio Quezada' },
-  { id: 2, paid: false, fullname: 'Yorchmagnanimus' },
-  { id: 3, paid: true, fullname: 'El carlitos' },
-  { id: 4, paid: false, fullname: 'Lopita' },
-  { id: 5, paid: true, fullname: 'Miguelon' },
-];
 
-const HistoryPage: NextPage = () => {
+interface Props {
+  orders: IOrder[];
+}
+
+const HistoryPage: NextPage<Props> = ({ orders }) => {
+  const rows = orders.map((order, idx) => ({
+    id: idx + 1,
+    paid: order.isPaid,
+    fullname: `${order.shippingAddress.firstName} ${order.shippingAddress.lastName}`,
+    orderId: order._id,
+  }));
+
   return (
     <ShopLayout
       title='Historial de ordenes'
@@ -52,7 +61,7 @@ const HistoryPage: NextPage = () => {
       <Typography variant='h1' component='h1'>
         Historial de ordenes
       </Typography>
-      <Grid container>
+      <Grid container className='fadeIn'>
         <Grid item xs={12} sx={{ height: 650, width: '100%' }}>
           <DataGrid
             rows={rows}
@@ -64,6 +73,27 @@ const HistoryPage: NextPage = () => {
       </Grid>
     </ShopLayout>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const session: any = await getSession({ req });
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/auth/login?p=/orders/history',
+        permanent: false,
+      },
+    };
+  }
+
+  const orders = await dbOrders.getOrderByUser(session.user._id);
+
+  return {
+    props: {
+      orders,
+    },
+  };
 };
 
 export default HistoryPage;
