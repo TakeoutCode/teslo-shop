@@ -1,3 +1,3 @@
 export * from './ItemCounter';
-export * from './NavBar';
+export * from './Navbar';
 export * from './SideMenu';

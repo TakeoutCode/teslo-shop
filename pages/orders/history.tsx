@@ -1,9 +1,9 @@
-import { NextPage, GetServerSideProps } from 'next';
 import NextLink from 'next/link';
-
-import { Link, Chip, Grid, Typography } from '@mui/material';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import { GetServerSideProps, NextPage } from 'next';
 import { getSession } from 'next-auth/react';
+
+import { Typography, Grid, Chip, Link } from '@mui/material';
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 
 import { ShopLayout } from '../../components/layouts';
 import { dbOrders } from '../../database';
@@ -12,12 +12,13 @@ import { IOrder } from '../../interfaces';
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 100 },
   { field: 'fullname', headerName: 'Nombre Completo', width: 300 },
+
   {
     field: 'paid',
     headerName: 'Pagada',
-    description: 'Muestra informacion si esta pagada la orden o no',
+    description: 'Muestra información si está pagada la orden o no',
     width: 200,
-    renderCell: (params: GridValueGetterParams) => {
+    renderCell: (params: GridRenderCellParams) => {
       return params.row.paid ? (
         <Chip color='success' label='Pagada' variant='outlined' />
       ) : (
@@ -26,12 +27,11 @@ const columns: GridColDef[] = [
     },
   },
   {
-    field: 'order',
-    headerName: 'Ver Orden',
-    description: 'Muestra informacion si esta pagada la orden o no',
+    field: 'orden',
+    headerName: 'Ver orden',
     width: 200,
     sortable: false,
-    renderCell: (params: GridValueGetterParams) => {
+    renderCell: (params: GridRenderCellParams) => {
       return (
         <NextLink href={`/orders/${params.row.orderId}`} passHref>
           <Link underline='always'>Ver orden</Link>
@@ -55,12 +55,13 @@ const HistoryPage: NextPage<Props> = ({ orders }) => {
 
   return (
     <ShopLayout
-      title='Historial de ordenes'
-      pageDescription='Historial de ordenes del cliente'
+      title={'Historial de ordenes'}
+      pageDescription={'Historial de ordenes del cliente'}
     >
       <Typography variant='h1' component='h1'>
         Historial de ordenes
       </Typography>
+
       <Grid container className='fadeIn'>
         <Grid item xs={12} sx={{ height: 650, width: '100%' }}>
           <DataGrid
@@ -87,7 +88,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     };
   }
 
-  const orders = await dbOrders.getOrderByUser(session.user._id);
+  const orders = await dbOrders.getOrdersByUser(session.user._id);
 
   return {
     props: {

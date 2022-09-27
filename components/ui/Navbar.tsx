@@ -20,7 +20,7 @@ import {
 } from '@mui/icons-material';
 import { UiContext, CartContext } from '../../context';
 
-export const NavBar = () => {
+export const Navbar = () => {
   const { asPath, push } = useRouter();
   const { toggleSideMenu } = useContext(UiContext);
   const { numberOfItems } = useContext(CartContext);
