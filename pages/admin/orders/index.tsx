@@ -9,7 +9,7 @@ import { IUser } from '../../../interfaces/user';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'Orden ID', width: 250 },
-  { field: 'email', headerName: 'WCorreo', width: 250 },
+  { field: 'email', headerName: 'Correo', width: 250 },
   { field: 'name', headerName: 'Nombre Completo', width: 300 },
   { field: 'total', headerName: 'Monto total', width: 300 },
 
