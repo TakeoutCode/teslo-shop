@@ -28,7 +28,7 @@ import {
 } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 
-import { tesloApi } from '../../../api';
+import { tesloApi } from '../../../tesloapi';
 import { AdminLayout } from '../../../components/layouts';
 import { dbProducts } from '../../../database';
 import { IProduct, ISize, IType } from '../../../interfaces';

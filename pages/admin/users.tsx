@@ -7,7 +7,7 @@ import useSWR from 'swr';
 
 import { AdminLayout } from '../../components/layouts/AdminLayout';
 import { IUser } from '../../interfaces';
-import { tesloApi } from '../../api';
+import { tesloApi } from '../../tesloapi';
 
 const UsersPage = () => {
   const { data, error } = useSWR<IUser[]>('/api/admin/users');

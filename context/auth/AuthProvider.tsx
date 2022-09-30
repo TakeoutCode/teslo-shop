@@ -5,7 +5,7 @@ import { useSession, signOut } from 'next-auth/react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
-import { tesloApi } from '../../api';
+import { tesloApi } from '../../tesloapi';
 import { IUser } from '../../interfaces';
 import { AuthContext, authReducer } from './';
 export interface AuthState {
