@@ -38,7 +38,7 @@ git clone git@github.com:TakeoutCode/teslo-shop.git
 ```
 yarn install
 ```
-#### Renombra el archivo para las variables de entonrno_
+#### _Renombra el archivo para las variables de entonrno_
 En la raiz del proyecto, renombra el archivo **.env.template** a **.env.local**
 
 Después del símbolo =, debes agregar lo valores de tus variables de entorno. A continuación, te comparto dónde encontrarás las claves:
@@ -60,6 +60,10 @@ CLOUDINARY_URL= | cloudinary://example:exameple@example-app | URL que nos propor
 
 Una vez que tengas las claves, agrega cada una a su respectivo campo sin agregar espacios ni comillas de ningún tipo.
 
+#### _Inicializar app_
+```
+  yarn start
+```
 # Contribuir
 - Si deseas contribuir al desarrollo de Teslo-Shop, siéntete libre de hacer un fork de este repositorio y enviar un pull request con tus mejoras.
 
