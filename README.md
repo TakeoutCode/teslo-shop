@@ -39,7 +39,7 @@ git clone git@github.com:TakeoutCode/teslo-shop.git
 yarn install
 ```
 #### _Renombra el archivo para las variables de entonrno_
-En la raiz del proyecto, renombra el archivo **.env.template** a **.env.local**
+En la raiz del proyecto, renombra el archivo **.env.template** a **.env**
 
 Después del símbolo =, debes agregar lo valores de tus variables de entorno. A continuación, te comparto dónde encontrarás las claves:
 
