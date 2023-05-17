@@ -41,7 +41,7 @@ git clone git@github.com:TakeoutCode/teslo-shop.git
 
 - El -d, significa **detached**
 
-#### _Instalación de dependencias_
+### _Instalación de dependencias_
 
 ```
 yarn install
@@ -68,7 +68,7 @@ CLOUDINARY_URL= | cloudinary://example:exameple@example-app | URL que nos propor
 
 Una vez que tengas las claves, agrega cada una a su respectivo campo sin agregar espacios ni comillas de ningún tipo.
 
-#### _Inicializar app_
+### _Inicializar app_
 ```
   yarn start
 ```
