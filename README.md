@@ -21,7 +21,7 @@
 npm install --global yarn
 ```
 
-#### _Instalación del repositorio_
+### _Instalación del repositorio_
 > Clonar Repositorio con HTTPS:
 ```
 git clone https://github.com/TakeoutCode/teslo-shop.git
@@ -33,12 +33,20 @@ git clone git@github.com:TakeoutCode/teslo-shop.git
 ```
 > En caso de que se haga un fork, instalar con el enlace que se generó.
 
+### Para correr localmente, se necesita la base de datos
+
+```bash
+  docker-compose up -d
+```
+
+- El -d, significa **detached**
+
 #### _Instalación de dependencias_
 
 ```
 yarn install
 ```
-#### _Renombra el archivo para las variables de entonrno_
+### _Renombra el archivo para las variables de entonrno_
 En la raiz del proyecto, renombra el archivo **.env.template** a **.env**
 
 Después del símbolo =, debes agregar lo valores de tus variables de entorno. A continuación, te comparto dónde encontrarás las claves:
